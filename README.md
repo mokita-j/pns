@@ -1,4 +1,4 @@
-# PNS (Project Name System)
+# PNS (Polkadot Naming Service)
 
 A decentralized naming system built with Next.js and Solidity smart contracts.
 
