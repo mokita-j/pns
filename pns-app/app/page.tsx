@@ -28,6 +28,9 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex items-center gap-4">
           <ConnectButton />
+          <h1 className="text-2xl font-bold">Human-readable names for Polkadot</h1>
+          <h2 className="text-sm">Link names to your wallet address.</h2>
+          <h2 className="text-sm">Simple, fast, and decentralized.</h2>
         </div>
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <div>
