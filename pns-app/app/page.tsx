@@ -203,41 +203,44 @@ export default function Home() {
           />
           <div className="h-[6px] gap-[5px]" />
           {/* DOT */}
-          {nameAvailableDOT ? (
-            isConnected ? (
-              <Button
-                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
+          {name.length > 2 && (
+            nameAvailableDOT? (
+              isConnected ? (
+                <Button
+                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
                 disabled={!nameAvailableDOT || isPending}
                 onClick={() => handleRegister("DOT")}
               >
-                Get your name now DOT 🚀
+                Get {name}.dot now! 🚀
               </Button>
             ) : (
               <ConnectButton label="Connect to Register" />
             )
           ) : (
             <Button asChild>
-              <Link href={`/${name}.dot`}>View Profile DOT</Link>
+              <Link href={`/${name}.dot`}>View {name}.dot</Link>
             </Button>
-          )}
+          ))}
+
           {/* JAM */}
-          {nameAvailableJAM ? (
-            isConnected ? (
-              <Button
-                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
+          {name.length > 2 && (
+            nameAvailableJAM ? (
+              isConnected ? (
+                <Button
+                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
                 disabled={!nameAvailableJAM || isPending}
                 onClick={() => handleRegister("JAM")}
               >
-                Get your name now JAM 🚀
+                Get {name}.jam now! 🚀
               </Button>
             ) : (
               <ConnectButton label="Connect to Register" />
             )
           ) : (
             <Button asChild>
-              <Link href={`/${name}.jam`}>View Profile JAM</Link>
+              <Link href={`/${name}.jam`}>View {name}.jam</Link>
             </Button>
-          )}
+          ))}
         </section>
 
         <section className="flex flex-col items-center gap-3 w-full max-w-3xl mt-[200px]">

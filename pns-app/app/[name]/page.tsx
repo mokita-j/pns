@@ -1,6 +1,6 @@
 "use client";
 
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { abiPNS } from "../abi";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import Error from "next/error";
 import { abiMetadataResolver } from "../abi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CopyButton } from "@/components/ui/copy-button";
+import { Edit } from "lucide-react";
 
 const LOADING_METADATA = {
   email: "Loading...",
@@ -40,12 +41,24 @@ const CONTRACT_ADDRESS_METADATA_RESOLVER =
 function ProfileContent({ name }: { name: string }) {
   const [nameHash, setNameHash] = useState<string | null>(null);
   const [metadata, setMetadata] = useState(LOADING_METADATA);
+  const [isOwner, setIsOwner] = useState(false);
+
+  const { address: clientAddress } = useAccount();
+
   const { data: address, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS_PNS,
     abi: abiPNS,
     functionName: "owner",
     args: [nameHash],
   });
+
+  useEffect(() => {
+    if (address && address.toString() === clientAddress?.toString()) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
+  }, [address, clientAddress]);
 
   const { data: metadataJson, isLoading: isLoadingMetadata } = useReadContract({
     address: CONTRACT_ADDRESS_METADATA_RESOLVER,
@@ -148,6 +161,13 @@ function ProfileContent({ name }: { name: string }) {
           <CopyButton value={name} iconSize={30} />
         </div>
         <div className="bg-white/5 backdrop-blur-sm border border-gray-200/20 p-8 rounded-2xl w-full shadow-lg">
+          {isOwner && (
+            <div className="flex flex-row items-center gap-2 justify-end">
+              <Link href={`/${name}/edit`}>
+                <Edit className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
           <div className="flex flex-col items-center mb-6">
             <Avatar className="w-24 h-24 mb-4 ring-4 ring-[#EC306E]/20">
               <AvatarImage
@@ -179,9 +199,11 @@ function ProfileContent({ name }: { name: string }) {
                   <CopyButton value={address.toString()} iconSize={16} />
                 </div>
 
-                <p className="text-sm break-all font-mono">
-                  {address.toString()}
-                </p>
+                <Link href={`https://blockscout-asset-hub.parity-chains-scw.parity.io/address/${address.toString()}`} target="_blank" rel="noopener noreferrer">
+                  <p className="text-sm break-all font-mono">
+                    {address.toString()}
+                  </p>
+                </Link>
               </div>
 
               <div className="bg-gray-50 p-4 rounded-lg">

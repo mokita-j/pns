@@ -12,6 +12,7 @@ import Error from "next/error";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CopyButton } from "@/components/ui/copy-button";
 import { toast } from "sonner";
+import { PencilOff } from "lucide-react";
 
 const LOADING_METADATA = {
   email: "Loading...",
@@ -176,7 +177,13 @@ function ProfileContent({ name }: { name: string }) {
           </h1>
           <CopyButton value={name} iconSize={30} />
         </div>
+       
         <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-sm border border-gray-200/20 p-8 rounded-2xl w-full shadow-lg">
+        <div className="flex flex-row items-center gap-2 justify-end">
+          <Link href={`/${name}`}>
+            <PencilOff className="w-4 h-4" />
+          </Link>
+        </div>
           <div className="flex flex-col items-center mb-6">
             <Avatar className="w-24 h-24 mb-4 ring-4 ring-[#EC306E]/20">
               <AvatarImage
