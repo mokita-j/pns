@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-/// @title Simple Name Service
+/// @title Polkadot Name Service
 /// @notice A service for registering and managing names on the blockchain
-contract SimpleNameService {
+contract PolkadotNameService {
     // Mapping from name to owner address
     mapping(string => address) public nameToAddress;
 
