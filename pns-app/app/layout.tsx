@@ -40,7 +40,9 @@ export default function RootLayout({
               <Image src="/logo.svg" alt="logo" width={200} height={70} />
             </Link>
             <div className="flex items-center gap-[20px]">
-              <ConnectButton />
+              <div className="scale-75 origin-right">
+                <ConnectButton />
+              </div>
               <Link href="https://github.com/mokita-j/pns">
                 <SiGithub size={24} />
               </Link>
@@ -55,12 +57,15 @@ export default function RootLayout({
                     About us
                   </Link>
                   <Separator orientation="vertical" />
-                  <Link href="/docs" className="text-sm hover:text-[#EC306E]">
+                  <Link
+                    href="/pns-docs/user-guide"
+                    className="text-sm hover:text-[#EC306E]"
+                  >
                     Docs
                   </Link>
                 </div>
                 <a
-                  href="https://www.buymeacoffee.com/mokita"
+                  href="https://www.buymeacoffee.com/helenaboing"
                   target="_blank"
                   rel="noreferrer"
                   className="text-sm hover:text-[#EC306E] flex items-center gap-2"
