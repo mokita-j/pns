@@ -2,22 +2,43 @@
 
 import { useReadContract } from "wagmi";
 import { abiPNS } from "../abi";
-import { use } from "react"
+import { use, useEffect, useState } from "react"
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { nameToHash } from "@/lib/utils";
+import Error from 'next/error'
 
-const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
+const CONTRACT_ADDRESS_PNS = "0xBE10c808B7ea10542b9F91418Ad3A696a132358d";
 
 function ProfileContent({ name }: { name: string }) {
+  const [nameHash, setNameHash] = useState<string | null>(null);
   const { data: address, isLoading } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: CONTRACT_ADDRESS_PNS,
     abi: abiPNS,
-    functionName: "nameToAddress",
-    args: [name],
+    functionName: "owner",
+    args: [nameHash],
   });
-  
 
+  useEffect(() => {
+    if (name.includes(".")) {
+      const [prefix, suffix] = name.split(".");
+      const tld = suffix.toUpperCase();
+      if (["DOT", "JAM"].includes(tld)) {
+        setNameHash(nameToHash(prefix, tld));
+      } else {
+        setNameHash(null);
+      }
+    }
+  }, [name]);
   
+  if (!name.includes(".")) {
+    return <Error statusCode={404} />
+  }
+
+  if (nameHash === null) {
+    return <Error statusCode={404} />
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen p-8 flex flex-col items-center gap-4">

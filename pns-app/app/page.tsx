@@ -6,7 +6,6 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { keccak256, encodePacked } from "viem";
 import { abiPNS, abiBaseRegistrar } from "./abi";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -17,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { PartyPopper } from "lucide-react";
+import { nameToHash } from "@/lib/utils";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -29,10 +29,10 @@ const CONTRACT_ADDRESS_REGISTRAR_DOT =
   "0x56fdDF0Eb0567371715997E43106bBE4667990C5";
 const CONTRACT_ADDRESS_REGISTRAR_JAM =
   "0xcBc1C5f7A095e5947d987eB41369327e775998fe";
-const PARENT_NODE_DOT =
-  "0x3fce7d1364a893e213bc4212792b517ffc88f5b13b86c8ef9c8d390c3a1370ce";
-const PARENT_NODE_JAM =
-  "0x6f142072f4756fbc7aaa14293ad39fafc39e33b39953c16205e8c1e0b04791bd";
+// const PARENT_NODE_DOT =
+//   "0x3fce7d1364a893e213bc4212792b517ffc88f5b13b86c8ef9c8d390c3a1370ce";
+// const PARENT_NODE_JAM =
+//   "0x6f142072f4756fbc7aaa14293ad39fafc39e33b39953c16205e8c1e0b04791bd";
 // const ROOT_NODE =
 //   "0x0000000000000000000000000000000000000000000000000000000000000000";
 const DEFAULT_DURATION = 31536000; // 1 year
@@ -110,21 +110,14 @@ export default function Home() {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
 
-    // Name to Address
-    // Calculate bytes32 hash of name
-    const currentNode = keccak256(encodePacked(["string"], [e.target.value]));
-    // Example data and types
-    const types = ["bytes32", "bytes32"];
-    const valuesDOT = [PARENT_NODE_DOT, currentNode];
-    const valuesJAM = [PARENT_NODE_JAM, currentNode];
-    // Encode and hash
-    const encodedDOT = encodePacked(types, valuesDOT);
-    const encodedJAM = encodePacked(types, valuesJAM);  
-    const myNameHashDOT = keccak256(encodedDOT);
-    const myNameHashJAM = keccak256(encodedJAM);
-    setNameHashDOT(myNameHashDOT);
-    setNameHashJAM(myNameHashJAM);
-    // console.log("myNameHash: ", myNameHash);
+    const myNameHashDOT = nameToHash(e.target.value, "DOT");
+    const myNameHashJAM = nameToHash(e.target.value, "JAM");
+    if (myNameHashDOT) {
+      setNameHashDOT(myNameHashDOT);
+    }
+    if (myNameHashJAM) {
+      setNameHashJAM(myNameHashJAM);
+    }
     refetchDOT();
     refetchJAM();
   };
