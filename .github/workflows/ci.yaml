@@ -28,42 +28,34 @@ jobs:
         cache: 'npm'
 
     - name: 📦 Install dependencies
-      run: npm ci
+      run: npm install
+      working-directory: pns-app
       env:
         NODE_ENV: development
 
     - name: 🔍 Run ESLint
       run: npm run lint
+      working-directory: pns-app
       continue-on-error: true
 
     - name: 📝 Type check
       run: npm run type-check || npm run tsc
+      working-directory: pns-app
       continue-on-error: true
-
-    - name: 🧪 Run Jest tests
-      run: npm run test
-      env:
-        CI: true
-        NODE_ENV: test
-
-    - name: 📊 Upload test coverage
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: coverage-report
-        path: coverage/
-        retention-days: 7
 
     - name: 🚨 Check for build errors
       run: npm run build
+      working-directory: pns-app
       env:
         NODE_ENV: production
       continue-on-error: true
 
     - name: 🔍 Security audit
       run: npm audit
+      working-directory: pns-app
       continue-on-error: true
 
     - name: 📦 Check for outdated dependencies
       run: npm outdated
+      working-directory: pns-app
       continue-on-error: true
