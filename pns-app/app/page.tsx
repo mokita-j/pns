@@ -1,7 +1,13 @@
 "use client";
 
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { abi } from "./abi";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { keccak256, encodePacked } from "viem";
+import { abiPNS, abiBaseRegistrar } from "./abi";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
@@ -11,71 +17,128 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { PartyPopper } from "lucide-react";
-const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
   variable: "--font-orbitron",
 });
 
+const CONTRACT_ADDRESS_PNS = "0xBE10c808B7ea10542b9F91418Ad3A696a132358d";
+// const CONTRACT_ADDRESS_RESOLVER = "0x1Ee165d0F70d6672A8a6C954Bc993e9c4Ef7bB17";
+const CONTRACT_ADDRESS_REGISTRAR_DOT =
+  "0x56fdDF0Eb0567371715997E43106bBE4667990C5";
+const CONTRACT_ADDRESS_REGISTRAR_JAM =
+  "0xcBc1C5f7A095e5947d987eB41369327e775998fe";
+const PARENT_NODE_DOT =
+  "0x3fce7d1364a893e213bc4212792b517ffc88f5b13b86c8ef9c8d390c3a1370ce";
+const PARENT_NODE_JAM =
+  "0x6f142072f4756fbc7aaa14293ad39fafc39e33b39953c16205e8c1e0b04791bd";
+// const ROOT_NODE =
+//   "0x0000000000000000000000000000000000000000000000000000000000000000";
+const DEFAULT_DURATION = 31536000; // 1 year
+
 export default function Home() {
   const [name, setName] = useState("");
-  const [nameAvailable, setNameAvailable] = useState(true);
-  const registeredNameRef = useRef("");
-  const { 
-    data: hash, 
-    isPending, 
-    writeContract 
-  } = useWriteContract() 
-  const { data, refetch } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi,
-    functionName: "nameToAddress",
-    args: [name],
-  });
+  const [nameHashDOT, setNameHashDOT] = useState("");
+  const [nameHashJAM, setNameHashJAM] = useState("");
+  const [nameAvailableDOT, setNameAvailableDOT] = useState(true);
+  const [nameAvailableJAM, setNameAvailableJAM] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const registeredNameRef = useRef("");
+  const { address } = useAccount();
+  const { data: hash, isPending, writeContract } = useWriteContract();
 
-  const { isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    })
+  const { data: ownerDOT, refetch: refetchDOT } = useReadContract({
+    address: CONTRACT_ADDRESS_PNS,
+    abi: abiPNS,
+    functionName: "owner",
+    args: [nameHashDOT],
+  });
+
+  const { data: ownerJAM, refetch: refetchJAM } = useReadContract({
+    address: CONTRACT_ADDRESS_PNS,
+    abi: abiPNS,
+    functionName: "owner",
+    args: [nameHashJAM],
+  });
+
+  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash,
+  });
 
   useEffect(() => {
     if (isConfirmed) {
-      toast.success(`Congratulations! You now own ${registeredNameRef.current}!`, {
-        action: {
-            label: 'View Profile',
-            onClick: () => window.open(`/${registeredNameRef.current}`, '_blank'),
+      toast.success(
+        `Congratulations! You now own ${registeredNameRef.current}!`,
+        {
+          action: {
+            label: "View Profile",
+            onClick: () =>
+              window.open(`/${registeredNameRef.current}`, "_blank"),
           },
-        // Transaction ID: ${hash} https://blockscout-asset-hub.parity-chains-scw.parity.io/tx/${hash}
-        icon: <PartyPopper className="px-[2px]" />,
-      });
+          // Transaction ID: ${hash} https://blockscout-asset-hub.parity-chains-scw.parity.io/tx/${hash}
+          icon: <PartyPopper className="px-[2px]" />,
+        }
+      );
+      refetchDOT();
+      refetchJAM();
     }
   }, [isConfirmed, hash]);
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (data) {
-      if (data.toString() === "0x0000000000000000000000000000000000000000") {
-        setNameAvailable(true);
+    if (ownerDOT) {
+      if (ownerDOT.toString() === "0x0000000000000000000000000000000000000000") {
+        setNameAvailableDOT(true);
       } else {
-        setNameAvailable(false);
+        setNameAvailableDOT(false);
       }
     }
-  }, [data]);
+  }, [ownerDOT]);
+
+  useEffect(() => {
+    if (ownerJAM) {
+      if (ownerJAM.toString() === "0x0000000000000000000000000000000000000000") {
+        setNameAvailableJAM(true);
+      } else {
+        setNameAvailableJAM(false);
+      }
+    }
+  }, [ownerJAM]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
-    refetch();
+
+    // Name to Address
+    // Calculate bytes32 hash of name
+    const currentNode = keccak256(encodePacked(["string"], [e.target.value]));
+    // Example data and types
+    const types = ["bytes32", "bytes32"];
+    const valuesDOT = [PARENT_NODE_DOT, currentNode];
+    const valuesJAM = [PARENT_NODE_JAM, currentNode];
+    // Encode and hash
+    const encodedDOT = encodePacked(types, valuesDOT);
+    const encodedJAM = encodePacked(types, valuesJAM);  
+    const myNameHashDOT = keccak256(encodedDOT);
+    const myNameHashJAM = keccak256(encodedJAM);
+    setNameHashDOT(myNameHashDOT);
+    setNameHashJAM(myNameHashJAM);
+    // console.log("myNameHash: ", myNameHash);
+    refetchDOT();
+    refetchJAM();
   };
 
-  const handleRegister = () => {
+  const handleRegister = (tld: string) => {
     if (!isConnected) {
       toast.error("Connect your wallet");
       return;
     }
-    if (!nameAvailable) {
+    if (tld === "DOT" && !nameAvailableDOT) {
+      toast.error("Name already taken");
+      return;
+    }
+    if (tld === "JAM" && !nameAvailableJAM) {
       toast.error("Name already taken");
       return;
     }
@@ -83,23 +146,28 @@ export default function Home() {
       toast.error("Name must be at least 3 characters");
       return;
     }
-
-    registeredNameRef.current = name;
+    
+    registeredNameRef.current = name + "." + tld.toLowerCase();
+   
     const promise = new Promise((resolve, reject) => {
+      const duration = DEFAULT_DURATION;
+      const owner = address; // address of the wallet connected to the app
       writeContract(
         {
-          address: CONTRACT_ADDRESS,
-          abi,
+          address: tld === "DOT" ? CONTRACT_ADDRESS_REGISTRAR_DOT : tld === "JAM" ? CONTRACT_ADDRESS_REGISTRAR_JAM : "0x0000000000000000000000000000000000000000",
+          abi: abiBaseRegistrar,
           functionName: "register",
-          args: [name],
+          args: [name, owner, duration],
         },
         {
           onSettled: (data, error) => {
             resolve(data);
             if (data) {
-              refetch();
+              refetchDOT();
+              refetchJAM();
               setTimeout(() => {
-                refetch();
+                refetchDOT();
+                refetchJAM();
               }, 5000);
             } else if (error) {
               reject(error);
@@ -110,14 +178,14 @@ export default function Home() {
     });
 
     toast.promise(promise, {
-      loading: "Wait and approve transaction in your wallet",
+      loading: "Wait and approve the transaction in your wallet",
       success: "Transaction sent",
       error: "Error registering name",
     });
   };
 
   const { isConnected } = useAccount();
-  
+
   if (!mounted) return null;
 
   return (
@@ -141,19 +209,40 @@ export default function Home() {
             onChange={handleNameChange}
           />
           <div className="h-[6px] gap-[5px]" />
-          {nameAvailable ? (
+          {/* DOT */}
+          {nameAvailableDOT ? (
             isConnected ? (
-            <Button
-              className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
-              disabled={!nameAvailable || isPending}
-              onClick={handleRegister}
-            >
-              Get your name now 🚀
-            </Button>
-          ) : <ConnectButton label="Connect to Register" />
+              <Button
+                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
+                disabled={!nameAvailableDOT || isPending}
+                onClick={() => handleRegister("DOT")}
+              >
+                Get your name now DOT 🚀
+              </Button>
+            ) : (
+              <ConnectButton label="Connect to Register" />
+            )
           ) : (
             <Button asChild>
-              <Link href={`/${name}`}>View Profile</Link>
+              <Link href={`/${name}.dot`}>View Profile DOT</Link>
+            </Button>
+          )}
+          {/* JAM */}
+          {nameAvailableJAM ? (
+            isConnected ? (
+              <Button
+                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
+                disabled={!nameAvailableJAM || isPending}
+                onClick={() => handleRegister("JAM")}
+              >
+                Get your name now JAM 🚀
+              </Button>
+            ) : (
+              <ConnectButton label="Connect to Register" />
+            )
+          ) : (
+            <Button asChild>
+              <Link href={`/${name}.jam`}>View Profile JAM</Link>
             </Button>
           )}
         </section>

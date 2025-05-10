@@ -1,7 +1,7 @@
 "use client";
 
 import { useReadContract } from "wagmi";
-import { abi } from "../abi";
+import { abiPNS } from "../abi";
 import { use } from "react"
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 function ProfileContent({ name }: { name: string }) {
   const { data: address, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi,
+    abi: abiPNS,
     functionName: "nameToAddress",
     args: [name],
   });
