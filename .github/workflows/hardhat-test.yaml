@@ -21,8 +21,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'npm'
-          cache-dependency-path: pns-v1/package-lock.json
 
       - name: Install dependencies
         working-directory: pns-v1
