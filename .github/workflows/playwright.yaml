@@ -1,0 +1,47 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
+    
+    - uses: actions/cache@v3
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-
+    
+    - name: Install dependencies
+      run: cd pns-app && pnpm install
+    
+    - name: Install Playwright Browsers
+      run: cd pns-app && pnpm exec playwright install --with-deps
+    
+    - name: Build Next.js app
+      run: cd pns-app && pnpm run build
+    
+    - name: Run Playwright tests
+      run: cd pns-app && pnpm exec playwright test
+    
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: pns-app/playwright-report/
+        retention-days: 30
