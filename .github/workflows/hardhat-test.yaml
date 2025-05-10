@@ -5,11 +5,12 @@ on:
     branches: [ main ]
     paths:
       - 'pns-v1/**'
+      - '.github/workflows/hardhat-test.yaml'
   pull_request:
     branches: [ main ]
     paths:
       - 'pns-v1/**'
-
+      - '.github/workflows/hardhat-test.yaml'
 run-name: 🚀 Contract Tests - ${{ github.event_name }} on ${{ github.ref }}
 
 jobs:
