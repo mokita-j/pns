@@ -40,7 +40,7 @@ export default function RootLayout({
             <div className="flex items-center gap-[20px]">
               <ConnectButton />
               <Link href="https://github.com/mokita-j/pns">
-                <SiGithub />
+                <SiGithub size={24} />
               </Link>
             </div>
           </header>
