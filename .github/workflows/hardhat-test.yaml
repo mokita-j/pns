@@ -1,0 +1,42 @@
+name: Hardhat Contract Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pns-v1/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'pns-v1/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: pns-v1/package-lock.json
+
+      - name: Install dependencies
+        working-directory: pns-v1
+        run: npm ci
+
+      - name: Download eth-rpc binary
+        run: |
+          mkdir -p pns-v1/bin
+          curl -L https://raw.githubusercontent.com/UtkarshBhardwaj007/hardhat-polkadot-example/main/binaries/eth-rpc -o pns-v1/bin/eth-rpc
+          chmod +x pns-v1/bin/eth-rpc
+
+      - name: Run Hardhat tests
+        working-directory: pns-v1
+        env:
+          ADAPTER_BINARY_PATH: ./bin/eth-rpc
+          WESTEND_HUB_PK: ${{ secrets.WESTEND_HUB_PK }}
+        run: npx hardhat test 
