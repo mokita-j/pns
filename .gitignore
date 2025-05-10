@@ -1,3 +1,4 @@
 .env.local
 pns-v1/artifacts-pvm
 pns-v1/cache-pvm
+pns-v1/node_modules
