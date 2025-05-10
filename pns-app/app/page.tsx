@@ -17,6 +17,7 @@ import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { PartyPopper } from "lucide-react";
 import { nameToHash } from "@/lib/utils";
+import confetti from "canvas-confetti";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -68,6 +69,39 @@ export default function Home() {
 
   useEffect(() => {
     if (isConfirmed) {
+      // Confetti animation
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = {
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        zIndex: 0,
+      };
+
+      const randomInRange = (min: number, max: number) =>
+        Math.random() * (max - min) + min;
+
+      const interval = window.setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        });
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        });
+      }, 250);
+
       toast.success(
         `Congratulations! You now own ${registeredNameRef.current}!`,
         {
@@ -83,13 +117,15 @@ export default function Home() {
       refetchDOT();
       refetchJAM();
     }
-  }, [isConfirmed, hash]);
+  }, [isConfirmed, hash, refetchDOT, refetchJAM]);
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (ownerDOT) {
-      if (ownerDOT.toString() === "0x0000000000000000000000000000000000000000") {
+      if (
+        ownerDOT.toString() === "0x0000000000000000000000000000000000000000"
+      ) {
         setNameAvailableDOT(true);
       } else {
         setNameAvailableDOT(false);
@@ -99,7 +135,9 @@ export default function Home() {
 
   useEffect(() => {
     if (ownerJAM) {
-      if (ownerJAM.toString() === "0x0000000000000000000000000000000000000000") {
+      if (
+        ownerJAM.toString() === "0x0000000000000000000000000000000000000000"
+      ) {
         setNameAvailableJAM(true);
       } else {
         setNameAvailableJAM(false);
@@ -139,15 +177,20 @@ export default function Home() {
       toast.error("Name must be at least 3 characters");
       return;
     }
-    
+
     registeredNameRef.current = name + "." + tld.toLowerCase();
-   
+
     const promise = new Promise((resolve, reject) => {
       const duration = DEFAULT_DURATION;
       const owner = address; // address of the wallet connected to the app
       writeContract(
         {
-          address: tld === "DOT" ? CONTRACT_ADDRESS_REGISTRAR_DOT : tld === "JAM" ? CONTRACT_ADDRESS_REGISTRAR_JAM : "0x0000000000000000000000000000000000000000",
+          address:
+            tld === "DOT"
+              ? CONTRACT_ADDRESS_REGISTRAR_DOT
+              : tld === "JAM"
+              ? CONTRACT_ADDRESS_REGISTRAR_JAM
+              : "0x0000000000000000000000000000000000000000",
           abi: abiBaseRegistrar,
           functionName: "register",
           args: [name, owner, duration],
@@ -203,44 +246,44 @@ export default function Home() {
           />
           <div className="h-[6px] gap-[5px]" />
           {/* DOT */}
-          {name.length > 2 && (
-            nameAvailableDOT? (
+          {name.length > 2 &&
+            (nameAvailableDOT ? (
               isConnected ? (
                 <Button
-                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
-                disabled={!nameAvailableDOT || isPending}
-                onClick={() => handleRegister("DOT")}
-              >
-                Get {name}.dot now! 🚀
-              </Button>
+                  className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
+                  disabled={!nameAvailableDOT || isPending}
+                  onClick={() => handleRegister("DOT")}
+                >
+                  Get {name}.dot now! 🚀
+                </Button>
+              ) : (
+                <ConnectButton label="Connect to Register" />
+              )
             ) : (
-              <ConnectButton label="Connect to Register" />
-            )
-          ) : (
-            <Button asChild>
-              <Link href={`/${name}.dot`}>View {name}.dot</Link>
-            </Button>
-          ))}
+              <Button asChild className="text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1">
+                <Link href={`/${name}.dot`}>View {name}.dot</Link>
+              </Button>
+            ))}
 
           {/* JAM */}
-          {name.length > 2 && (
-            nameAvailableJAM ? (
+          {name.length > 2 &&
+            (nameAvailableJAM ? (
               isConnected ? (
                 <Button
-                className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
-                disabled={!nameAvailableJAM || isPending}
-                onClick={() => handleRegister("JAM")}
-              >
-                Get {name}.jam now! 🚀
-              </Button>
+                  className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1"
+                  disabled={!nameAvailableJAM || isPending}
+                  onClick={() => handleRegister("JAM")}
+                >
+                  Get {name}.jam now! 🚀
+                </Button>
+              ) : (
+                <ConnectButton label="Connect to Register" />
+              )
             ) : (
-              <ConnectButton label="Connect to Register" />
-            )
-          ) : (
-            <Button asChild>
-              <Link href={`/${name}.jam`}>View {name}.jam</Link>
-            </Button>
-          ))}
+              <Button asChild className="text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1">
+                <Link href={`/${name}.jam`}>View {name}.jam</Link>
+              </Button>
+            ))}
         </section>
 
         <section className="flex flex-col items-center gap-3 w-full max-w-3xl mt-[200px]">

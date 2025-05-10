@@ -11,8 +11,8 @@ import { nameToHash } from "@/lib/utils";
 import Error from "next/error";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CopyButton } from "@/components/ui/copy-button";
-import { toast } from "sonner";
 import { PencilOff } from "lucide-react";
+import { toast } from "sonner";
 
 const LOADING_METADATA = {
   email: "Loading...",
@@ -43,7 +43,6 @@ const CONTRACT_ADDRESS_METADATA_RESOLVER =
 function ProfileContent({ name }: { name: string }) {
   const [nameHash, setNameHash] = useState<string | null>(null);
   const [formData, setFormData] = useState(LOADING_METADATA);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: address, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS_PNS,
@@ -106,22 +105,22 @@ function ProfileContent({ name }: { name: string }) {
     e.preventDefault();
     if (!nameHash) return;
 
-    setIsSubmitting(true);
-    try {
-      const metadataString = JSON.stringify(formData);
-      await writeContract({
-        address: CONTRACT_ADDRESS_METADATA_RESOLVER,
-        abi: abiMetadataResolver,
-        functionName: "setMetadata",
-        args: [nameHash, metadataString],
-      });
-      toast.success("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const metadataString = JSON.stringify(formData);
+    writeContract({
+      address: CONTRACT_ADDRESS_METADATA_RESOLVER,
+      abi: abiMetadataResolver,
+      functionName: "setMetadata",
+      args: [nameHash, metadataString],
+    },
+    {
+      onSettled: (data, error) => {
+        if (data) {
+          toast.success("Transaction sent!");
+        } else if (error) {
+          toast.error("Transaction failed!");
+        }
+      },
+    });
   };
 
   if (!name.includes(".")) {
@@ -320,9 +319,9 @@ function ProfileContent({ name }: { name: string }) {
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || isPending}
+              disabled={isPending}
             >
-              {isSubmitting || isPending ? "Saving..." : "Save Changes"}
+              {isPending ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>
