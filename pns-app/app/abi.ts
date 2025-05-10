@@ -600,3 +600,92 @@ export const abiBaseRegistrar = [
 		"type": "function"
 	}
 ]
+
+export const abiMetadataResolver = [
+	{
+	 "inputs": [
+	  {
+	   "internalType": "address",
+	   "name": "pnsAddr",
+	   "type": "address"
+	  }
+	 ],
+	 "stateMutability": "nonpayable",
+	 "type": "constructor"
+	},
+	{
+	 "anonymous": false,
+	 "inputs": [
+	  {
+	   "indexed": true,
+	   "internalType": "bytes32",
+	   "name": "node",
+	   "type": "bytes32"
+	  },
+	  {
+	   "indexed": false,
+	   "internalType": "string",
+	   "name": "a",
+	   "type": "string"
+	  }
+	 ],
+	 "name": "MetadataChanged",
+	 "type": "event"
+	},
+	{
+	 "inputs": [
+	  {
+	   "internalType": "bytes32",
+	   "name": "node",
+	   "type": "bytes32"
+	  },
+	  {
+	   "internalType": "string",
+	   "name": "_metadata",
+	   "type": "string"
+	  }
+	 ],
+	 "name": "setMetadata",
+	 "outputs": [],
+	 "stateMutability": "nonpayable",
+	 "type": "function"
+	},
+	{
+	 "inputs": [
+	  {
+	   "internalType": "bytes32",
+	   "name": "",
+	   "type": "bytes32"
+	  }
+	 ],
+	 "name": "metadata",
+	 "outputs": [
+	  {
+	   "internalType": "string",
+	   "name": "",
+	   "type": "string"
+	  }
+	 ],
+	 "stateMutability": "view",
+	 "type": "function"
+	},
+	{
+	 "inputs": [
+	  {
+	   "internalType": "bytes4",
+	   "name": "interfaceID",
+	   "type": "bytes4"
+	  }
+	 ],
+	 "name": "supportsInterface",
+	 "outputs": [
+	  {
+	   "internalType": "bool",
+	   "name": "",
+	   "type": "bool"
+	  }
+	 ],
+	 "stateMutability": "pure",
+	 "type": "function"
+	}
+   ]
