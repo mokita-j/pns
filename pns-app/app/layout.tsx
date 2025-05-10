@@ -70,7 +70,7 @@ export default function RootLayout({
                 </a>
               </div>
               <div className="text-center text-sm text-gray-500">
-                MIT License © 2024
+                MIT License 2025
               </div>
             </div>
           </footer>

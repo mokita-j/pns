@@ -140,7 +140,7 @@ export default function Home() {
             >
               Get your name now 🚀
             </Button>
-          ) : <ConnectButton />
+          ) : <ConnectButton label="Connect to Register" />
           ) : (
             <Button asChild>
               <Link href={`/${name}`}>View Profile</Link>
