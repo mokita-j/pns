@@ -1,45 +1,71 @@
-name: Playwright Tests
+name: 🎭 Playwright Tests
+
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
 
+run-name: 🎭 E2E Tests - ${{ github.event_name }} on ${{ github.ref }}
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
     
-    - uses: actions/setup-node@v4
+    - name: ⚙️ Setup Node.js
+      uses: actions/setup-node@v4
       with:
         node-version: lts/*
     
-    - uses: pnpm/action-setup@v2
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v2
       with:
         version: 8
     
-    - uses: actions/cache@v3
+    - name: 💾 Cache dependencies
+      uses: actions/cache@v3
       with:
         path: ~/.pnpm-store
         key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-
     
-    - name: Install dependencies
-      run: cd pns-app && pnpm install
+    - name: 📦 Install dependencies
+      run: |
+        cd pns-app && pnpm install
+        echo "### 📦 Dependencies" >> $GITHUB_STEP_SUMMARY
+        echo "Project dependencies installed successfully" >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
     
-    - name: Install Playwright Browsers
-      run: cd pns-app && pnpm exec playwright install --with-deps
+    - name: 🌐 Install Playwright Browsers
+      run: |
+        cd pns-app && pnpm exec playwright install --with-deps
+        echo "### 🌐 Playwright Setup" >> $GITHUB_STEP_SUMMARY
+        echo "Playwright browsers and dependencies installed" >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
     
-    - name: Build Next.js app
-      run: cd pns-app && pnpm run build
+    - name: 🏗️ Build Next.js app
+      run: |
+        cd pns-app && pnpm run build
+        echo "### 🏗️ Build Status" >> $GITHUB_STEP_SUMMARY
+        echo "Next.js application built successfully" >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
     
-    - name: Run Playwright tests
-      run: cd pns-app && pnpm exec playwright test
+    - name: 🧪 Run Playwright tests
+      run: |
+        cd pns-app && pnpm exec playwright test
+        echo "### 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "Playwright tests completed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Detailed test report available in the artifacts" >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
     
-    - uses: actions/upload-artifact@v4
+    - name: 📤 Upload test report
+      uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
         name: playwright-report

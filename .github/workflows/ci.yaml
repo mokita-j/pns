@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ main, master ]
 
+run-name: 🚀 CI - ${{ github.event_name }} on ${{ github.ref }}
+
 jobs:
   quality-assurance:
     name: 🚀 Quality Assurance
@@ -27,34 +29,52 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: 📦 Install dependencies
-      run: npm install
+      run: |
+        npm install
+        echo "### 📦 Dependencies" >> $GITHUB_STEP_SUMMARY
+        echo "Dependencies installed successfully" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       env:
         NODE_ENV: development
 
     - name: 🔍 Run ESLint
-      run: npm run lint
+      run: |
+        npm run lint
+        echo "### 🔍 ESLint Results" >> $GITHUB_STEP_SUMMARY
+        echo "ESLint check completed" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       continue-on-error: true
 
     - name: 📝 Type check
-      run: npm run type-check || npm run tsc
+      run: |
+        npm run type-check || npm run tsc
+        echo "### 📝 TypeScript Check" >> $GITHUB_STEP_SUMMARY
+        echo "TypeScript type checking completed" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       continue-on-error: true
 
     - name: 🚨 Check for build errors
-      run: npm run build
+      run: |
+        npm run build
+        echo "### 🚨 Build Status" >> $GITHUB_STEP_SUMMARY
+        echo "Build completed successfully" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       env:
         NODE_ENV: production
       continue-on-error: true
 
     - name: 🔍 Security audit
-      run: npm audit
+      run: |
+        npm audit
+        echo "### 🔍 Security Audit" >> $GITHUB_STEP_SUMMARY
+        echo "Security audit completed" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       continue-on-error: true
 
     - name: 📦 Check for outdated dependencies
-      run: npm outdated
+      run: |
+        npm outdated
+        echo "### 📦 Dependency Status" >> $GITHUB_STEP_SUMMARY
+        echo "Dependency version check completed" >> $GITHUB_STEP_SUMMARY
       working-directory: pns-app
       continue-on-error: true
