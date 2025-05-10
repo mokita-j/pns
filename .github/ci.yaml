@@ -1,0 +1,69 @@
+name: 🧪 Continuous Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  quality-assurance:
+    name: 🚀 Quality Assurance
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: ⚙️ Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: 📦 Install dependencies
+      run: npm ci
+      env:
+        NODE_ENV: development
+
+    - name: 🔍 Run ESLint
+      run: npm run lint
+      continue-on-error: true
+
+    - name: 📝 Type check
+      run: npm run type-check || npm run tsc
+      continue-on-error: true
+
+    - name: 🧪 Run Jest tests
+      run: npm run test
+      env:
+        CI: true
+        NODE_ENV: test
+
+    - name: 📊 Upload test coverage
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 7
+
+    - name: 🚨 Check for build errors
+      run: npm run build
+      env:
+        NODE_ENV: production
+      continue-on-error: true
+
+    - name: 🔍 Security audit
+      run: npm audit
+      continue-on-error: true
+
+    - name: 📦 Check for outdated dependencies
+      run: npm outdated
+      continue-on-error: true

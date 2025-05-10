@@ -108,7 +108,7 @@ To get your WalletConnect Project ID:
 
 Note: Before deploying, make sure to:
 
-1. Add Asset Hub Westend Testnet to MetaMask:
+1. Add [Asset Hub Westend Testnet](https://contracts.polkadot.io/connect-to-asset-hub) to MetaMask:
    - Network name: Asset-Hub Westend Testnet
    - RPC URL: `https://westend-asset-hub-eth-rpc.polkadot.io`
    - Chain ID: `420420421`

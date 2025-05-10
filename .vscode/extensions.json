@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "JuanBlanco.solidity",
+        "github.vscode-pull-request-github",
+        "github.vscode-github-actions",
+        "github.github-actions"
+    ]
+}
