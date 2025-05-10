@@ -1,13 +1,9 @@
 "use client";
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { abi } from "./abi";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import Link from "next/link";
-import Image from "next/image";
-import { SiGithub } from "react-icons/si";
 
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
@@ -68,15 +64,6 @@ export default function Home() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <header className="flex items-center justify-between w-full p-[30px]">
-        <Image src="/logo.svg" alt="logo" width={200} height={70} />
-        <div className="flex items-center gap-[20px]">
-          <ConnectButton />
-          <Link href="https://github.com/mokita-j/pns">
-            <SiGithub />
-          </Link>
-        </div>
-      </header>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col items-center gap-3">
           <h1 className="text-2xl font-bold">
