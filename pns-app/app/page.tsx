@@ -101,7 +101,17 @@ export default function Home() {
               ? "Connect your wallet"
               : "Get your name now 🚀"}
           </button>
-          {!nameAvailable && <p>Address: {address}</p>}
+          {!nameAvailable && (
+            <div className="flex flex-col items-center gap-2">
+              <p>Address: {address}</p>
+              <a 
+                href={`/${name}`}
+                className="text-blue-500 hover:text-blue-700 underline"
+              >
+                View Profile
+              </a>
+            </div>
+          )}
         </div>
       </main>
     </div>

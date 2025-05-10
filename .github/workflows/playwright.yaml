@@ -10,6 +10,7 @@ run-name: 🎭 E2E Tests - ${{ github.event_name }} on ${{ github.ref }}
 
 jobs:
   test:
+    name: 🧪 End-to-End Testing
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
