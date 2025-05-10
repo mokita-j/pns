@@ -7,8 +7,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import Image from "next/image";
 import { SiGithub } from "react-icons/si";
-import { Coffee } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+// import { Coffee } from "lucide-react";
+// import { Separator } from "@/components/ui/separator";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -49,7 +49,7 @@ export default function RootLayout({
           {children}
           <footer className="w-full border-t mt-auto max-w-5xl mx-auto">
             <div className="max-w-7xl mx-auto px-4 py-8">
-              <div className="flex justify-between items-center mb-8">
+              {/* <div className="flex justify-between items-center mb-8">
                 <div className="flex gap-8">
                   <Link href="/about" className="text-sm hover:text-[#EC306E]">
                     About us
@@ -68,9 +68,9 @@ export default function RootLayout({
                   Buy me Coffee
                   <Coffee size={16} />
                 </a>
-              </div>
+              </div> */}
               <div className="text-center text-sm text-gray-500">
-                MIT License 2025
+                © 2025
               </div>
             </div>
           </footer>

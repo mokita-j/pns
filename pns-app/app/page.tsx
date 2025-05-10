@@ -2,7 +2,7 @@
 
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { abi } from "./abi";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Orbitron } from "next/font/google";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { PartyPopper } from "lucide-react";
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
 const orbitron = Orbitron({
@@ -20,6 +21,7 @@ const orbitron = Orbitron({
 export default function Home() {
   const [name, setName] = useState("");
   const [nameAvailable, setNameAvailable] = useState(true);
+  const registeredNameRef = useRef("");
   const { 
     data: hash, 
     isPending, 
@@ -40,7 +42,14 @@ export default function Home() {
 
   useEffect(() => {
     if (isConfirmed) {
-      toast.success(`The name was registered successfully. Transaction ID: ${hash} https://blockscout-asset-hub.parity-chains-scw.parity.io/tx/${hash}`);
+      toast.success(`Congratulations! You now own ${registeredNameRef.current}!`, {
+        action: {
+            label: 'View Profile',
+            onClick: () => window.open(`/${registeredNameRef.current}`, '_blank'),
+          },
+        // Transaction ID: ${hash} https://blockscout-asset-hub.parity-chains-scw.parity.io/tx/${hash}
+        icon: <PartyPopper className="px-[2px]" />,
+      });
     }
   }, [isConfirmed, hash]);
 
@@ -75,6 +84,7 @@ export default function Home() {
       return;
     }
 
+    registeredNameRef.current = name;
     const promise = new Promise((resolve, reject) => {
       writeContract(
         {
@@ -124,7 +134,7 @@ export default function Home() {
           <h2 className="text-sm">Simple, fast, and decentralized.</h2>
           <div className="h-[6px] gap-[5px]" />
           <Input
-            className="border-3 border-gray-300 rounded-md p-2 bg-gray-100 text-black gap-[5px] flex items-center justify-center max-w-[300px]"
+            className="border-3 border-gray-300 rounded-md p-2 bg-gray-100 text-black gap-[5px] flex items-center justify-center max-w-[300px] my-2"
             type="text"
             value={name}
             placeholder="Check if your name is available"
@@ -148,11 +158,11 @@ export default function Home() {
           )}
         </section>
 
-        <section className="flex flex-col items-center gap-3 w-full max-w-3xl mt-16">
+        <section className="flex flex-col items-center gap-3 w-full max-w-3xl mt-[200px]">
           <h2 className={`${orbitron.className} text-2xl font-bold`}>
             How it Works
           </h2>
-          <p className="text-sm text-gray-600 text-center">
+          <p className="text-sm text-gray-600 text-center mb-10">
             Having trouble? Follow these simple steps:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
