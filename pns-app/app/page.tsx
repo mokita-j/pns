@@ -1,9 +1,10 @@
 'use client';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useReadContract, useWriteContract,  } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import { abi } from './abi';
 import { useState, useEffect } from "react";
+import { toast } from "sonner"
 
 const CONTRACT_ADDRESS = '0x6938A48508DD26027aBF887A73255f1fcD890953';
 
@@ -18,6 +19,8 @@ export default function Home() {
     functionName: 'nameToAddress',
     args: [name],
   });
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (data) {
@@ -41,10 +44,22 @@ export default function Home() {
       abi,
       functionName: 'register',
       args: [name],
+    },
+    {
+      onSettled: (data, error) => {
+        if (data) {
+          toast.success('Name registered successfully');
+          refetch();
+        } else if (error) {
+          toast.error('Error registering name: ' + error);
+        }
+      },
     });
   };
 
   const {isConnected} = useAccount();
+
+  if (!mounted) return null;
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -59,7 +74,8 @@ export default function Home() {
           <button className="bg-blue-500 text-white p-2 rounded-md"
             disabled={!nameAvailable} onClick={handleRegister}
             >
-                {!isConnected ? 'Connect your wallet' : nameAvailable ? 'Get your name now 🚀' : 'Name already taken'}</button>
+            {!nameAvailable ? 'Name already taken' : !isConnected ? 'Connect your wallet' : 'Get your name now 🚀'}
+          </button>
           {!nameAvailable && <p>Address: {address}</p>}
         </div>
       </main>
