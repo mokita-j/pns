@@ -2,3 +2,4 @@
 pns-v1/artifacts-pvm
 pns-v1/cache-pvm
 **/node_modules
+.DS_Store

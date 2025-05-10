@@ -6,7 +6,9 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Orbitron } from "next/font/google";
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
 const orbitron = Orbitron({
@@ -16,7 +18,6 @@ const orbitron = Orbitron({
 
 export default function Home() {
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
   const [nameAvailable, setNameAvailable] = useState(true);
   const { writeContract } = useWriteContract();
   const { data, refetch } = useReadContract({
@@ -30,7 +31,6 @@ export default function Home() {
 
   useEffect(() => {
     if (data) {
-      setAddress(data.toString());
       if (data.toString() === "0x0000000000000000000000000000000000000000") {
         setNameAvailable(true);
       } else {
@@ -45,24 +45,48 @@ export default function Home() {
   };
 
   const handleRegister = () => {
-    writeContract(
-      {
-        address: CONTRACT_ADDRESS,
-        abi,
-        functionName: "register",
-        args: [name],
-      },
-      {
-        onSettled: (data, error) => {
-          if (data) {
-            toast.success("Name registered successfully");
-            refetch();
-          } else if (error) {
-            toast.error("Error registering name: " + error);
-          }
+    if (!isConnected) {
+      toast.error("Connect your wallet");
+      return;
+    }
+    if (!nameAvailable) {
+      toast.error("Name already taken");
+      return;
+    }
+    if (name.length < 3) {
+      toast.error("Name must be at least 3 characters");
+      return;
+    }
+
+    const promise = new Promise((resolve, reject) => {
+      writeContract(
+        {
+          address: CONTRACT_ADDRESS,
+          abi,
+          functionName: "register",
+          args: [name],
         },
-      }
-    );
+        {
+          onSettled: (data, error) => {
+            resolve(data);
+            if (data) {
+              refetch();
+              setTimeout(() => {
+                refetch();
+              }, 5000);
+            } else if (error) {
+              reject(error);
+            }
+          },
+        }
+      );
+    });
+
+    toast.promise(promise, {
+      loading: "Wait and approve transaction in your wallet",
+      success: "Transaction sent",
+      error: "Error registering name",
+    });
   };
 
   const { isConnected } = useAccount();
@@ -82,34 +106,26 @@ export default function Home() {
           <h2 className="text-sm">Link names to your wallet address.</h2>
           <h2 className="text-sm">Simple, fast, and decentralized.</h2>
           <div className="h-[6px] gap-[5px]" />
-          <input
-            className="border-3 border-gray-300 rounded-md p-2 bg-gray-100 text-black gap-[5px] flex items-center justify-center"
+          <Input
+            className="border-3 border-gray-300 rounded-md p-2 bg-gray-100 text-black gap-[5px] flex items-center justify-center max-w-[300px]"
             type="text"
             value={name}
+            placeholder="Check if your name is available"
             onChange={handleNameChange}
           />
           <div className="h-[6px] gap-[5px]" />
-          <button
-            className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
-            disabled={!nameAvailable}
-            onClick={handleRegister}
-          >
-            {!nameAvailable
-              ? "Name already taken"
-              : !isConnected
-              ? "Connect your wallet"
-              : "Get your name now 🚀"}
-          </button>
-          {!nameAvailable && (
-            <div className="flex flex-col items-center gap-2">
-              <p>Address: {address}</p>
-              <a
-                href={`/${name}`}
-                className="text-blue-500 hover:text-blue-700 underline"
-              >
-                View Profile
-              </a>
-            </div>
+          {nameAvailable ? (
+            <Button
+              className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
+              disabled={!nameAvailable}
+              onClick={handleRegister}
+            >
+              {!isConnected ? "Connect your wallet" : "Get your name now 🚀"}
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link href={`/${name}`}>View Profile</Link>
+            </Button>
           )}
         </section>
 

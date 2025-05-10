@@ -35,8 +35,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <header className="flex items-center justify-between w-full p-[30px]">
-            <Image src="/logo.svg" alt="logo" width={200} height={70} />
+          <header className="flex items-center justify-between w-full p-[30px] max-w-5xl mx-auto">
+            <Link href="/">
+              <Image src="/logo.svg" alt="logo" width={200} height={70} />
+            </Link>
             <div className="flex items-center gap-[20px]">
               <ConnectButton />
               <Link href="https://github.com/mokita-j/pns">
@@ -45,7 +47,7 @@ export default function RootLayout({
             </div>
           </header>
           {children}
-          <footer className="w-full border-t mt-auto">
+          <footer className="w-full border-t mt-auto max-w-5xl mx-auto">
             <div className="max-w-7xl mx-auto px-4 py-8">
               <div className="flex justify-between items-center mb-8">
                 <div className="flex gap-8">
