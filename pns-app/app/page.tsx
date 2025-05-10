@@ -78,7 +78,7 @@ export default function Home() {
         </div>
       </header>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-3">
           <h1 className="text-2xl font-bold">
             Human-readable names for Polkadot
           </h1>
@@ -91,7 +91,7 @@ export default function Home() {
             onChange={handleNameChange}
           />
           <button
-            className="bg-blue-500 text-white p-2 rounded-md"
+            className="bg-[#EC306E] text-white p-2 rounded-md"
             disabled={!nameAvailable}
             onClick={handleRegister}
           >
