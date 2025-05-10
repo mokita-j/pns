@@ -18,7 +18,7 @@ The frontend is built with:
 - Tailwind CSS
 - Modern React patterns and best practices
 
-### Smart Contracts (`contracts/`)
+### Smart Contracts (`pns-v2/`)
 
 The smart contracts are written in Solidity and handle the core functionality of the naming system.
 
