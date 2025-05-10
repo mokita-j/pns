@@ -11,7 +11,7 @@ on:
     paths:
       - 'pns-v1/**'
       - '.github/workflows/hardhat-test.yaml'
-run-name: 🚀 Contract Tests - ${{ github.event_name }} on ${{ github.ref }}
+run-name: ⛏️ Contract Tests - ${{ github.event_name }} on ${{ github.ref }}
 
 jobs:
   test:
@@ -29,7 +29,7 @@ jobs:
 
       - name: 📦 Install dependencies
         working-directory: pns-v1
-        run: npm ci
+        run: npm install
 
       - name: 🔧 Download eth-rpc binary
         run: |
