@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { abi } from "./abi";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -19,7 +19,11 @@ const orbitron = Orbitron({
 export default function Home() {
   const [name, setName] = useState("");
   const [nameAvailable, setNameAvailable] = useState(true);
-  const { writeContract } = useWriteContract();
+  const { 
+    data: hash, 
+    isPending, 
+    writeContract 
+  } = useWriteContract() 
   const { data, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi,
@@ -27,6 +31,18 @@ export default function Home() {
     args: [name],
   });
   const [mounted, setMounted] = useState(false);
+
+  const { isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    })
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast.success(`The name was registered successfully. Transaction ID: ${hash} https://blockscout-asset-hub.parity-chains-scw.parity.io/tx/${hash}`);
+    }
+  }, [isConfirmed, hash]);
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
@@ -90,7 +106,7 @@ export default function Home() {
   };
 
   const { isConnected } = useAccount();
-
+  
   if (!mounted) return null;
 
   return (
@@ -117,7 +133,7 @@ export default function Home() {
           {nameAvailable ? (
             <Button
               className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
-              disabled={!nameAvailable}
+              disabled={!nameAvailable || isPending}
               onClick={handleRegister}
             >
               {!isConnected ? "Connect your wallet" : "Get your name now 🚀"}
