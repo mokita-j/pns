@@ -1,4 +1,4 @@
-name: 🧪 Smart Contract Tests
+name: ⛏️ Smart Contract Tests
 
 on:
   push:
@@ -14,7 +14,7 @@ run-name: 🚀 Contract Tests - ${{ github.event_name }} on ${{ github.ref }}
 
 jobs:
   test:
-    name: 🧪 Run Contract Tests
+    name: ⛏️ Run Contract Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
           curl -L https://raw.githubusercontent.com/UtkarshBhardwaj007/hardhat-polkadot-example/main/binaries/eth-rpc -o pns-v1/bin/eth-rpc
           chmod +x pns-v1/bin/eth-rpc
 
-      - name: 🧪 Run Hardhat tests
+      - name: ⛏️ Run Hardhat tests
         working-directory: pns-v1
         env:
           ADAPTER_BINARY_PATH: ./bin/eth-rpc
