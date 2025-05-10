@@ -4,6 +4,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract,  } from 'wagmi';
 import { abi } from './abi';
 import { useState, useEffect } from "react";
+import { toast } from "sonner"
+import Image from 'next/image';
 
 const CONTRACT_ADDRESS = '0x6938A48508DD26027aBF887A73255f1fcD890953';
 
@@ -11,6 +13,8 @@ export default function Home() {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [nameAvailable, setNameAvailable] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const {writeContract} = useWriteContract();
   const { data, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -41,10 +45,27 @@ export default function Home() {
       abi,
       functionName: 'register',
       args: [name],
+    },
+    {
+      onSettled: (data, error) => {
+        if (data) {
+          toast.success('Name registered successfully');
+        } else if (error) {
+          toast.error('Name already taken');
+        }
+      },
     });
   };
 
   const {isConnected} = useAccount();
+
+  if (!mounted) return (
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <Image src="/spinner.gif" alt="spinner" width={100} height={100} />
+      </main>
+    </div>
+  );
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -59,7 +80,7 @@ export default function Home() {
           <button className="bg-blue-500 text-white p-2 rounded-md"
             disabled={!nameAvailable} onClick={handleRegister}
             >
-                {!isConnected ? 'Connect your wallet' : nameAvailable ? 'Get your name now 🚀' : 'Name already taken'}</button>
+                {!nameAvailable ? 'Name already taken' : !isConnected ? 'Connect your wallet' : 'Get your name now 🚀'}</button>
           {!nameAvailable && <p>Address: {address}</p>}
         </div>
       </main>
