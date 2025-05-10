@@ -9,6 +9,7 @@ import { Orbitron } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
 const orbitron = Orbitron({
@@ -131,13 +132,15 @@ export default function Home() {
           />
           <div className="h-[6px] gap-[5px]" />
           {nameAvailable ? (
+            isConnected ? (
             <Button
               className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
               disabled={!nameAvailable || isPending}
               onClick={handleRegister}
             >
-              {!isConnected ? "Connect your wallet" : "Get your name now 🚀"}
+              Get your name now 🚀
             </Button>
+          ) : <ConnectButton />
           ) : (
             <Button asChild>
               <Link href={`/${name}`}>View Profile</Link>
