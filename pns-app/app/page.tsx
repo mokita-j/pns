@@ -4,8 +4,15 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { abi } from "./abi";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { Orbitron } from "next/font/google";
 
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+});
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -63,22 +70,27 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="flex flex-col items-center gap-3">
-          <h1 className="text-2xl font-bold">
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-3 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-[32px] items-center justify-center">
+        <section className="flex flex-col items-center">
+          <h1 className={`${orbitron.className} text-2xl font-bold`}>
             Human-readable names for Polkadot
           </h1>
+          <div className="h-[6px]" />
+          <Separator className="w-[120px]" />
+          <div className="h-[6px] gap-[5px]" />
           <h2 className="text-sm">Link names to your wallet address.</h2>
           <h2 className="text-sm">Simple, fast, and decentralized.</h2>
+          <div className="h-[6px] gap-[5px]" />
           <input
-            className="border-2 border-gray-300 rounded-md p-2 bg-gray-100 text-black"
+            className="border-3 border-gray-300 rounded-md p-2 bg-gray-100 text-black gap-[5px] flex items-center justify-center"
             type="text"
             value={name}
             onChange={handleNameChange}
           />
+          <div className="h-[6px] gap-[5px]" />
           <button
-            className="bg-[#EC306E] text-white p-2 rounded-md"
+            className="bg-[#EC306E] text-white p-2 rounded-md gap-[5px] flex items-center justify-center"
             disabled={!nameAvailable}
             onClick={handleRegister}
           >
@@ -91,7 +103,7 @@ export default function Home() {
           {!nameAvailable && (
             <div className="flex flex-col items-center gap-2">
               <p>Address: {address}</p>
-              <a 
+              <a
                 href={`/${name}`}
                 className="text-blue-500 hover:text-blue-700 underline"
               >
@@ -99,7 +111,45 @@ export default function Home() {
               </a>
             </div>
           )}
-        </div>
+        </section>
+
+        <section className="flex flex-col items-center gap-3 w-full max-w-3xl mt-16">
+          <h2 className={`${orbitron.className} text-2xl font-bold`}>
+            How it Works
+          </h2>
+          <p className="text-sm text-gray-600 text-center">
+            Having trouble? Follow these simple steps:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex flex-col items-center text-center gap-1">
+              <div className="w-12 h-12 rounded-full bg-[#EC306E] text-white flex items-center justify-center font-bold">
+                01
+              </div>
+              <h3 className="font-bold">Pick a name</h3>
+              <p className="text-sm text-gray-600">
+                Choose your preferred name for your wallet address
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-[#EC306E] text-white flex items-center justify-center font-bold">
+                02
+              </div>
+              <h3 className="font-bold">Connect your wallet</h3>
+              <p className="text-sm text-gray-600">
+                Link your wallet to register your chosen name
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-[#EC306E] text-white flex items-center justify-center font-bold">
+                03
+              </div>
+              <h3 className="font-bold">Register and use it</h3>
+              <p className="text-sm text-gray-600">
+                Use your name across all Polkadot parachains
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
