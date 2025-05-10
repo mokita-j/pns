@@ -4,6 +4,7 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { abi } from "./abi";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 
 const CONTRACT_ADDRESS = "0x6938A48508DD26027aBF887A73255f1fcD890953";
 
@@ -69,6 +70,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold">
             Human-readable names for Polkadot
           </h1>
+          <Separator className="my-4" />
           <h2 className="text-sm">Link names to your wallet address.</h2>
           <h2 className="text-sm">Simple, fast, and decentralized.</h2>
           <input
@@ -127,15 +129,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="flex items-center justify-center w-full p-4">
-        <p>
-          <a
-            href="https://github.com/mokita-j"
-            target="_blank"
-            rel="noreferrer"
-          ></a>
-        </p>
-      </footer>
     </div>
   );
 }
