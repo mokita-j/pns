@@ -7,7 +7,7 @@ A decentralized naming system built with Next.js and Solidity smart contracts.
 The project consists of two main components:
 
 - `pns-app/`: A Next.js application that provides the user interface
-- `pns-v2/`: Solidity smart contracts that handle the core functionality
+- `pns-v2/`: Solidity smart contracts that handle the code service
 
 ### Frontend Application (`pns-app/`)
 
