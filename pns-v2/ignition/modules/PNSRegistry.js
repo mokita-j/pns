@@ -4,11 +4,10 @@
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
 const PNSRegistryModule = buildModule("PNSRegistryModule", (m) => {
-  const initialSupply = m.getParameter("initialSupply", 1000000n * 10n ** 18n);
 
-  const token = m.contract("PNSRegistry", []);
+  const registry = m.contract("PNSRegistry", []);
 
-  return { token };
+  return { registry };
 });
 
 module.exports = PNSRegistryModule;
