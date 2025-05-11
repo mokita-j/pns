@@ -103,7 +103,8 @@ export default function Home() {
       }, 250);
 
       toast.success(
-        `Congratulations! You now own ${registeredNameRef.current}!`,
+        `Congratulations!
+        You now own ${registeredNameRef.current}!`,
         {
           action: {
             label: "View Profile",

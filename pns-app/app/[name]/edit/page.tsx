@@ -26,14 +26,14 @@ const LOADING_METADATA = {
 };
 
 const DEFAULT_METADATA = {
-  email: "Add your email",
-  name: "Add your name",
-  description: "Add your description",
+  email: "",
+  name: "",
+  description: "",
   image: "/pufferfish.png",
-  website: "Add your website",
-  twitter: "Add your twitter",
-  telegram: "Add your telegram",
-  discord: "Add your discord",
+  website: "",
+  twitter: "",
+  telegram: "",
+  discord: "",
 };
 
 const CONTRACT_ADDRESS_PNS = "0xBE10c808B7ea10542b9F91418Ad3A696a132358d";
