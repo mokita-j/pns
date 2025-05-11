@@ -116,6 +116,9 @@ function ProfileContent({ name }: { name: string }) {
       onSettled: (data, error) => {
         if (data) {
           toast.success("Transaction sent!");
+          setTimeout(() => {
+            window.location.href = `/${name}`;
+          }, 2000);
         } else if (error) {
           toast.error("Transaction failed!");
         }

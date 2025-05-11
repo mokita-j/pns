@@ -90,11 +90,23 @@ function ProfileContent({ name }: { name: string }) {
   }, [metadataJson]);
 
   useEffect(() => {
-    if (name.includes(".")) {
+    const count = name.split(".").length;
+    
+    if (count === 2) {
       const [prefix, suffix] = name.split(".");
       const tld = suffix.toUpperCase();
       if (["DOT", "JAM"].includes(tld)) {
         setNameHash(nameToHash(prefix, tld));
+      } else {
+        setNameHash(null);
+      }
+    }
+
+    if (count === 3) {
+      const [prefix, middle, suffix] = name.split(".");
+      const tld = suffix.toUpperCase();
+      if (["DOT", "JAM"].includes(tld)) {
+        setNameHash(nameToHash(middle, tld, prefix));
       } else {
         setNameHash(null);
       }
@@ -176,10 +188,10 @@ function ProfileContent({ name }: { name: string }) {
               </AvatarFallback>
             </Avatar>
             <h2 className="text-2xl font-semibold text-gray-800">
-              {metadata?.name || "No name found"}
+              {metadata?.name || ""}
             </h2>
             <p className="text-gray-500 mt-1">
-              {metadata?.description || "No description found"}
+              {metadata?.description || ""}
             </p>
           </div>
 
@@ -204,7 +216,7 @@ function ProfileContent({ name }: { name: string }) {
                 <h3 className="text-sm font-medium text-gray-500 mb-1">
                   Email
                 </h3>
-                <p className="text-sm">{metadata?.email || "No email found"}</p>
+                <p className="text-sm">{metadata?.email || "-"}</p>
               </div>
             </div>
 
@@ -219,7 +231,7 @@ function ProfileContent({ name }: { name: string }) {
                   rel="noopener noreferrer"
                   className="text-sm text-[#EC306E] hover:underline"
                 >
-                  {metadata?.website || "No website found"}
+                  {metadata?.website || "-"}
                 </a>
               </div>
 
@@ -235,7 +247,7 @@ function ProfileContent({ name }: { name: string }) {
                 >
                   {metadata?.twitter
                     ? `@${metadata.twitter}`
-                    : "No twitter found"}
+                    : "-"}
                 </a>
               </div>
             </div>
@@ -253,7 +265,7 @@ function ProfileContent({ name }: { name: string }) {
                 >
                   {metadata?.telegram
                     ? `@${metadata.telegram}`
-                    : "No telegram found"}
+                    : "-"}
                 </a>
               </div>
 
@@ -269,7 +281,7 @@ function ProfileContent({ name }: { name: string }) {
                 >
                   {metadata?.discord
                     ? `@${metadata.discord}`
-                    : "No discord found"}
+                    : "-"}
                 </a>
               </div>
             </div>

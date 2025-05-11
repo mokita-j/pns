@@ -12,7 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Calculate bytes32 hash of name
-export function nameToHash(name: string, tld: string) {
+export function nameToHash(name: string, tld: string, subdomain?: string) {
   // const nameHash = keccak256(encodePacked(["string"], [name]));
 
   const currentNode = keccak256(encodePacked(["string"], [name]));
@@ -36,5 +36,15 @@ export function nameToHash(name: string, tld: string) {
   // Encode and hash
   const encoded = encodePacked(types, values);
   const myNameHash = keccak256(encoded);
+
+
+  if (subdomain) {
+    const subNode = keccak256(encodePacked(["string"], [subdomain]));
+    values = [myNameHash, subNode];
+    const encoded = encodePacked(types, values);
+    const combinedNameHash = keccak256(encoded);
+    return combinedNameHash;
+  }
+
   return myNameHash;
 }
