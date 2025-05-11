@@ -1,16 +1,15 @@
 "use client";
 
 import { useAccount, useReadContract } from "wagmi";
-import { abiPNS } from "../abi";
+import { abiPNS, abiMetadataResolver } from "@/app/abi";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { nameToHash } from "@/lib/utils";
 import Error from "next/error";
-import { abiMetadataResolver } from "../abi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CopyButton } from "@/components/ui/copy-button";
-import { Edit } from "lucide-react";
+import { Edit, UserPen } from "lucide-react";
 
 const LOADING_METADATA = {
   email: "Loading...",
@@ -169,6 +168,9 @@ function ProfileContent({ name }: { name: string }) {
         <div className="bg-white/5 backdrop-blur-sm border border-gray-200/20 p-8 rounded-2xl w-full shadow-lg">
           {isOwner && (
             <div className="flex flex-row items-center gap-2 justify-end">
+              <Link href={`/${name}/transfer`}>
+                <UserPen className="w-4 h-4" />
+              </Link>
               <Link href={`/${name}/edit`}>
                 <Edit className="w-4 h-4" />
               </Link>

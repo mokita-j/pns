@@ -178,6 +178,10 @@ export default function Home() {
       toast.error("Name must be at least 3 characters");
       return;
     }
+    if (name.includes(".")) {
+      toast.error("Subdomains are registered in the domain page");
+      return;
+    }
 
     registeredNameRef.current = name + "." + tld.toLowerCase();
 
@@ -247,7 +251,7 @@ export default function Home() {
           />
           <div className="h-[6px] gap-[5px]" />
           {/* DOT */}
-          {name.length > 2 &&
+          {(name.length > 2 && !name.includes(".")) &&
             (nameAvailableDOT ? (
               isConnected ? (
                 <Button
@@ -267,7 +271,7 @@ export default function Home() {
             ))}
 
           {/* JAM */}
-          {name.length > 2 &&
+          {(name.length > 2 && !name.includes(".")) &&
             (nameAvailableJAM ? (
               isConnected ? (
                 <Button

@@ -1,7 +1,7 @@
 "use client";
 
 import { useReadContract, useWriteContract } from "wagmi";
-import { abiPNS, abiMetadataResolver } from "../../abi";
+import { abiPNS, abiMetadataResolver } from "@/app/abi";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
