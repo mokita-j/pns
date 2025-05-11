@@ -16,7 +16,7 @@ export default function AboutUs() {
         <div className="flex flex-col items-center mb-6">
             <Avatar className="w-24 h-24 mb-4 ring-4 ring-[#EC306E]/20">
               <AvatarImage
-                src="/logo.svg"
+                src="/pufferfish.png"
               />
               <AvatarFallback className="text-2xl">
                 PNS

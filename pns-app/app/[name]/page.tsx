@@ -16,7 +16,7 @@ const LOADING_METADATA = {
   email: "Loading...",
   name: "Loading...",
   description: "Loading...",
-  image: "https://placehold.co/600x400",
+  image: "/pufferfish.png",
   website: "Loading...",
   twitter: "Loading...",
   telegram: "Loading...",
@@ -27,7 +27,7 @@ const DEFAULT_METADATA = {
   email: "Add your email",
   name: "Add your name",
   description: "Add your description",
-  image: "https://placehold.co/600x400",
+  image: "/pufferfish.png",
   website: "Add your website",
   twitter: "Add your twitter",
   telegram: "Add your telegram",
@@ -174,7 +174,7 @@ function ProfileContent({ name }: { name: string }) {
                 src={
                   metadata?.image
                     ? metadata.image
-                    : "https://placehold.co/600x400"
+                    : "/pufferfish.png"
                 }
               />
               <AvatarFallback className="text-2xl">

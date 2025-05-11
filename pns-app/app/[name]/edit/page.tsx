@@ -18,7 +18,7 @@ const LOADING_METADATA = {
   email: "Loading...",
   name: "Loading...",
   description: "Loading...",
-  image: "https://placehold.co/600x400",
+  image: "/pufferfish.png",
   website: "Loading...",
   twitter: "Loading...",
   telegram: "Loading...",
@@ -29,7 +29,7 @@ const DEFAULT_METADATA = {
   email: "Add your email",
   name: "Add your name",
   description: "Add your description",
-  image: "https://placehold.co/600x400",
+  image: "/pufferfish.png",
   website: "Add your website",
   twitter: "Add your twitter",
   telegram: "Add your telegram",
@@ -186,7 +186,7 @@ function ProfileContent({ name }: { name: string }) {
           <div className="flex flex-col items-center mb-6">
             <Avatar className="w-24 h-24 mb-4 ring-4 ring-[#EC306E]/20">
               <AvatarImage
-                src={formData.image || "https://placehold.co/600x400"}
+                src={formData.image || "/pufferfish.png"}
               />
               <AvatarFallback className="text-2xl">
                 {formData.name ? formData.name.charAt(0) : "N"}
