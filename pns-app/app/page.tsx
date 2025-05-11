@@ -276,9 +276,7 @@ export default function Home() {
                 >
                   Get {name}.jam now! 🚀
                 </Button>
-              ) : (
-                <ConnectButton label="Connect to Register" />
-              )
+              ) : (<></>)
             ) : (
               <Button asChild className="text-white p-2 rounded-md gap-[5px] flex items-center justify-center my-1">
                 <Link href={`/${name}.jam`}>View {name}.jam</Link>

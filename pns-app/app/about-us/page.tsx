@@ -23,7 +23,7 @@ export default function AboutUs() {
               </AvatarFallback>
             </Avatar>
             <h2 className="text-2xl font-semibold text-gray-800">
-            Polka Name Service (PNS)
+            Polkadot Name Service (PNS)
             </h2>
             <p className="text-gray-500 mt-1">
             A lightweight naming system for the Polkadot ecosystem
@@ -40,6 +40,7 @@ export default function AboutUs() {
               <TabsContent value="project" className="space-y-4">
                 <div className="space-y-4">
                   <p>
+                    The Pufferfish Name Service (PNS) is a lightweight naming system for the Polkadot ecosystem.
                     Designed to simplify multi-address management
                     across parachains and wallet UX.
                   </p>

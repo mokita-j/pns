@@ -9,6 +9,8 @@ import Image from "next/image";
 import { SiGithub } from "react-icons/si";
 import { Coffee } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { InteractiveDots } from "@/components/ui/interactive-dots";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -40,7 +42,9 @@ export default function RootLayout({
               <Image src="/logo.svg" alt="logo" width={200} height={70} />
             </Link>
             <div className="flex items-center gap-[20px]">
-              <ConnectButton />
+              <div className="scale-75 origin-right">
+                <ConnectButton />
+              </div>
               <Link href="https://github.com/mokita-j/pns">
                 <SiGithub size={24} />
               </Link>
@@ -71,15 +75,14 @@ export default function RootLayout({
                   rel="noreferrer"
                   className="text-sm hover:text-[#EC306E] flex items-center gap-2"
                 >
-                  Buy me Coffee
+                  Buy me a Coffee
                   <Coffee size={16} />
                 </a>
               </div>
-              <div className="text-center text-sm text-gray-500">
-                © 2025
-              </div>
+              <div className="text-center text-sm text-gray-500">Polkadot Name Service © 2025</div>
             </div>
           </footer>
+          <InteractiveDots />
         </Providers>
         <Toaster />
       </body>
