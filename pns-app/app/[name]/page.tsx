@@ -74,12 +74,6 @@ function ProfileContent({ name }: { name: string }) {
   }, [isLoadingMetadata]);
 
   useEffect(() => {
-    console.log(
-      "Calling function metadata at contract: ",
-      CONTRACT_ADDRESS_METADATA_RESOLVER,
-      "with args: "
-    );
-    console.log("metadataJson: ", metadataJson);
     if (metadataJson && typeof metadataJson === "string") {
       try {
         // Replace single quotes with double quotes
