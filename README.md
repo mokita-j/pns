@@ -2,6 +2,9 @@
 
 A decentralized naming system built with Next.js and Solidity smart contracts.
 
+Try it out: [pns-swart.vercel.app](https://pns-swart.vercel.app)  
+Documentation: [PNS GitBook](https://pns.gitbook.io/pns)
+
 ## Project Structure
 
 The project consists of two main components:
