@@ -7,8 +7,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import Image from "next/image";
 import { SiGithub } from "react-icons/si";
-// import { Coffee } from "lucide-react";
-// import { Separator } from "@/components/ui/separator";
+import { Coffee } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -49,18 +49,24 @@ export default function RootLayout({
           {children}
           <footer className="w-full border-t mt-auto max-w-5xl mx-auto">
             <div className="max-w-7xl mx-auto px-4 py-8">
-              {/* <div className="flex justify-between items-center mb-8">
+              <div className="flex justify-between items-center mb-8">
                 <div className="flex gap-8">
-                  <Link href="/about" className="text-sm hover:text-[#EC306E]">
-                    About us
+                  <Link
+                    href="/about-us"
+                    className="text-sm hover:text-[#EC306E]"
+                  >
+                    About Us
                   </Link>
                   <Separator orientation="vertical" />
-                  <Link href="/docs" className="text-sm hover:text-[#EC306E]">
+                  <Link
+                    href="https://pns.gitbook.io/"
+                    className="text-sm hover:text-[#EC306E]"
+                  >
                     Docs
                   </Link>
                 </div>
                 <a
-                  href="https://www.buymeacoffee.com/mokita"
+                  href="https://www.buymeacoffee.com/helenaboing"
                   target="_blank"
                   rel="noreferrer"
                   className="text-sm hover:text-[#EC306E] flex items-center gap-2"
@@ -68,7 +74,7 @@ export default function RootLayout({
                   Buy me Coffee
                   <Coffee size={16} />
                 </a>
-              </div> */}
+              </div>
               <div className="text-center text-sm text-gray-500">
                 © 2025
               </div>
